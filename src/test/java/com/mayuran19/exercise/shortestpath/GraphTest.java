@@ -1,11 +1,8 @@
-package com.mayuran19.exercise.shortestpath.model;
+package com.mayuran19.exercise.shortestpath;
 
 import org.junit.Test;
 
-import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.junit.Assert.*;
 
 public class GraphTest {
 
