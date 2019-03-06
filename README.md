@@ -7,6 +7,12 @@ Steps to run
 4. Input should be in the following format <A,B,5>
 5. If the input is not valid, application ignores the input and builds the graph without that edge
 
+Assumption
+==========
+While traversing the graph, if the node is visited, then it will not be visited again
+For example start node is A and end node is C,
+A->B->C->D->C, here it will not traverse A->B->C->D->C->D-C
+
 Algorithm
 =========
 To find the path between two nodes,
