@@ -20,26 +20,31 @@ public class Graph {
             if(!graphNodes.contains(source)){
                 graphNodes.add(source);
             }else{
+                //If the node is already in the node list, get it
                 source = graphNodes.stream()
                         .filter(node -> node.getName().equals(edge.getSource().getName()))
                         .findFirst().get();
             }
+            //Add the outgoing edges for the source node
             source.getOutgoingEdges().add(edge);
 
             if(!graphNodes.contains(destination)){
                 graphNodes.add(destination);
             }else{
+                //If the node is already in the node list, get it
                 destination = graphNodes.stream()
                         .filter(node -> node.getName().equals(edge.getDestination().getName()))
                         .findFirst().get();
             }
+            //Add the incoming edges for the source node
             destination.getIncomingEdges().add(edge);
+            System.out.println("Edge added: " + edge);
         }
     }
 
     /**
      * When a path is given as string A-B-C-D, this method will convert it
-     * into list of Edge objects in the order
+     * into list of Edge objects in the order like A->B, B->C, C->D
      * @param path
      * @return
      */
@@ -89,7 +94,7 @@ public class Graph {
     }
 
     /**
-     * Get the Edge object using source node name and destination node name
+     * Get the Edge object in the graph using source node name and destination node name
      * @param source
      * @param destination
      * @return
@@ -107,7 +112,7 @@ public class Graph {
 
     /**
      * Build the possible paths from source to destination
-     * Currently it just print the paths
+     * It is using recursive visitor to get all possible paths
      * @param source
      * @param destination
      */
@@ -128,8 +133,9 @@ public class Graph {
      * 1. Visit the source node
      * 2. Get all outgoing edges for source node
      * 3. In loop, follow the each edge from the source node
-     * 4. Add the current node to stack
-     * 5. If the current node is same as destination, print the path and pop the stack
+     * 4. If the stack contains the edge already, skip the visiting as its visited already
+     * 5. Else set the edge as visited and push to stack
+     * 6. If the current node is same as destination, add this to path list and continue visiting the nodes
      * 6. If the current node is marked as visited, break the loop
      * 7. Else recurrsivly visit the nodes
      * @param source
@@ -166,13 +172,13 @@ public class Graph {
             }
         }
 
-        //Recursion is finished here
+        //Recursion is finished here, reset the visit status
         source.getOutgoingEdges().stream().forEach(edge -> edge.setVisited(false));
         if(stack.size() > 0){
             stack.pop();
         }
         //All the edges are visited, marked the node as visited
-        source.setVisited(true);
+        //source.setVisited(true);
     }
 
     /**
