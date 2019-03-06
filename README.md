@@ -1,5 +1,6 @@
 Steps to run
 ============
+**JDK 8 or higher is required**
 1. Import the project using any IDE as gradle project
 2. Execute the main method
 3. To test with different inputs, change the file input.txt in resources folder
