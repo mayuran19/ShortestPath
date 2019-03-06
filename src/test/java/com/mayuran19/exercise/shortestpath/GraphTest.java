@@ -1,5 +1,8 @@
 package com.mayuran19.exercise.shortestpath;
 
+import com.mayuran19.exercise.shortestpath.algorithm.Edge;
+import com.mayuran19.exercise.shortestpath.algorithm.Graph;
+import com.mayuran19.exercise.shortestpath.algorithm.Node;
 import org.junit.Test;
 
 import java.util.stream.Collectors;

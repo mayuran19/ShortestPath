@@ -1,4 +1,4 @@
-package com.mayuran19.exercise.shortestpath;
+package com.mayuran19.exercise.shortestpath.algorithm;
 
 import java.util.*;
 
