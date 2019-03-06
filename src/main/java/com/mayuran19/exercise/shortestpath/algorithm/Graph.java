@@ -140,26 +140,34 @@ public class Graph {
     public void visitNode(Node source, Node destination, Stack<Edge> stack, List<Set<Edge>> possiblePaths){
         Set<Edge> outgoingEdges = source.getOutgoingEdges();
         for(Edge edge : outgoingEdges){
-            Node edgeDestination = getNodeByName(edge.getDestination().getName());
-            stack.add(edge);
-            if(edgeDestination.equals(destination)){
-                //Reached destination, print the full path and pop the node
-                String pathStting = stack.stream().map(edge1 -> edge1.toString())
-                        .collect(Collectors.joining("->"));
-                System.out.println(pathStting);
-                Set<Edge> paths = new HashSet<>();
-                possiblePaths.add(paths);
-                stack.stream().forEach(edge1 -> {
-                    paths.add(edge1);
-                });
-
-                stack.pop();
-                //visitNode(edgeDestination, destination, stack, possiblePaths);
-            } else{
-                //Next node, visit recurrsively
-                visitNode(edgeDestination, destination, stack, possiblePaths);
+            if(stack.contains(edge)){
+                //If the node has been visited already, don't visit again
+                continue;
+            }else{
+                edge.setVisited(true);
+                Node edgeDestination = getNodeByName(edge.getDestination().getName());
+                stack.add(edge);
+                if(edgeDestination.equals(destination)){
+                    //Reached destination, print the full path and pop the node
+                    String pathStting = stack.stream().map(edge1 -> edge1.toString())
+                            .collect(Collectors.joining("->"));
+                    //System.out.println(pathStting);
+                    Set<Edge> paths = new HashSet<>();
+                    possiblePaths.add(paths);
+                    stack.stream().forEach(edge1 -> {
+                        paths.add(edge1);
+                    });
+                    //stack.pop();
+                    visitNode(edgeDestination, destination, stack, possiblePaths);
+                } else{
+                    //Next node, visit recurrsively
+                    visitNode(edgeDestination, destination, stack, possiblePaths);
+                }
             }
         }
+
+        //Recursion is finished here
+        source.getOutgoingEdges().stream().forEach(edge -> edge.setVisited(false));
         if(stack.size() > 0){
             stack.pop();
         }
@@ -167,6 +175,11 @@ public class Graph {
         source.setVisited(true);
     }
 
+    /**
+     * Return the number of nodes in a path
+     * @param path
+     * @return
+     */
     public int getNumberOfNodesForPath(Set<Edge> path){
         Set<Node> nodes = new HashSet<>();
         for(Edge edge : path){

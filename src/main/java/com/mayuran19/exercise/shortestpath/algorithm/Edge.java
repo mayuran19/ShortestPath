@@ -6,6 +6,7 @@ public class Edge {
     private Node source;
     private Node destination;
     private int weight;
+    private boolean isVisited = false;
 
     public Edge(Node source, Node destination, int weight) {
         //Ensure source, destination and weight is not null
@@ -51,6 +52,14 @@ public class Edge {
 
     public void setWeight(int weight) {
         this.weight = weight;
+    }
+
+    public boolean isVisited() {
+        return isVisited;
+    }
+
+    public void setVisited(boolean visited) {
+        isVisited = visited;
     }
 
     @Override

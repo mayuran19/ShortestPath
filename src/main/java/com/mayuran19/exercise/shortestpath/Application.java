@@ -6,6 +6,7 @@ import com.mayuran19.exercise.shortestpath.util.FileInputUtil;
 import com.mayuran19.exercise.shortestpath.util.UserInput;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Mayuran Satchithanantham
@@ -75,5 +76,36 @@ public class Application {
                 .filter(p -> graph.getNumberOfNodesForPath(p) == 4)
                 .count();
         System.out.println("The number of trips starting at A and ending at C with exactly 4 stops: " + count1);
+
+        //The length of the shortest route (in terms of distance to travel) from A to C.
+        int min =paths1.stream()
+                .map(edgeSet -> edgeSet.stream()
+                        .mapToInt(edge -> edge.getWeight())
+                        .sum()
+                ).min((o1, o2) -> o1.compareTo(o2))
+                .get();
+        System.out.println("The length of the shortest route (in terms of distance to travel) from A to C: " + min);
+
+        //The length of the shortest route (in terms of distance to travel) from B to B.
+        List<Set<Edge>> paths2 = graph.getPossiblePaths("B","B");
+        int min2 =paths2.stream()
+                .map(edgeSet -> edgeSet.stream()
+                        .mapToInt(edge -> edge.getWeight())
+                        .sum()
+                ).min((o1, o2) -> o1.compareTo(o2))
+                .get();
+        System.out.println("The length of the shortest route (in terms of distance to travel) from B to B: " + min2);
+
+        //The number of different routes from C to C with a distance of less than 50. E.g. CDC, CEBC are both trips of less than 30
+        List<Set<Edge>> path30 = paths.stream().filter(path -> path.stream().mapToInt(value -> value.getWeight()).sum() < 50)
+                .collect(Collectors.toList());
+        List<String> less30Paths = new ArrayList<>();
+        for(Set<Edge> path : path30){
+            String pathStting = path.stream().map(edge1 -> edge1.toString())
+                    .collect(Collectors.joining("->"));
+            less30Paths.add(pathStting);
+        }
+        String s = less30Paths.stream().collect(Collectors.joining(System.lineSeparator()));
+        System.out.println("The number of different routes from C to C with a distance of less than 50. E.g. CDC, CEBC are both trips of less than 30: \n" + s);
     }
 }
