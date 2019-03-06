@@ -152,10 +152,7 @@ public class Graph {
                 stack.stream().forEach(edge1 -> {
                     paths.add(edge1);
                 });
-                visitNode(edgeDestination, destination, stack, possiblePaths);
-                if(possiblePaths.contains(paths)){
-                    break;
-                }
+
                 stack.pop();
                 //visitNode(edgeDestination, destination, stack, possiblePaths);
             } else{
