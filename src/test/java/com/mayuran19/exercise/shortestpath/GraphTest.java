@@ -39,12 +39,12 @@ public class GraphTest {
             System.out.println("*************");
         }
 
-        graph.printDistance("A-B-C");
+        /*graph.printDistance("A-B-C");
         graph.printDistance("A-D");
         graph.printDistance("A-D-C");
         graph.printDistance("A-E-B-C-D");
-        graph.printDistance("A-E-D");
+        graph.printDistance("A-E-D");*/
 
-        graph.buildAllPaths("C", "C");
+        graph.getPossiblePaths("C", "C");
     }
 }

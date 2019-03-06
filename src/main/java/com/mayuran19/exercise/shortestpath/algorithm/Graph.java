@@ -1,6 +1,7 @@
 package com.mayuran19.exercise.shortestpath.algorithm;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Graph {
     public Set<Node> graphNodes = new HashSet<>();
@@ -62,15 +63,16 @@ public class Graph {
     /**
      * Print the distance of a path
      * Path string will be for example A-B-C-D-E
+     * @param questionString
      * @param path
      */
-    public void printDistance(String path){
+    public void printDistance(String questionString, String path){
         List<Edge> edges = getPath(path);
         if(edges == null){
-            System.out.println("NO SUCH ROUTE");
+            System.out.println(questionString + "NO SUCH ROUTE");
         }else{
             int sum = edges.stream().mapToInt(edge -> edge.getWeight()).sum();
-            System.out.println(path + ":" + sum);
+            System.out.println(questionString + sum);
         }
     }
 
@@ -109,15 +111,17 @@ public class Graph {
      * @param source
      * @param destination
      */
-    public void buildAllPaths(String source, String destination){
+    public List<Set<Edge>> getPossiblePaths(String source, String destination){
         graphNodes.stream().forEach(node -> node.setVisited(false));
         Node sourceNode = getNodeByName(source);
         Node destinationNode = getNodeByName(destination);
 
-        List<Edge> path = new ArrayList<>();
+        List<Set<Edge>> possiblePaths = new ArrayList<>();
         Node currentNode = sourceNode;
         Stack<Edge> stack = new Stack<>();
-        visitNode(currentNode, destinationNode, stack);
+        visitNode(currentNode, destinationNode, stack, possiblePaths);
+
+        return possiblePaths;
     }
 
     /**
@@ -133,27 +137,47 @@ public class Graph {
      * @param stack
      * @return
      */
-    public void visitNode(Node source, Node destination, Stack<Edge> stack){
+    public void visitNode(Node source, Node destination, Stack<Edge> stack, List<Set<Edge>> possiblePaths){
         Set<Edge> outgoingEdges = source.getOutgoingEdges();
         for(Edge edge : outgoingEdges){
             Node edgeDestination = getNodeByName(edge.getDestination().getName());
             stack.add(edge);
             if(edgeDestination.equals(destination)){
                 //Reached destination, print the full path and pop the node
-                stack.stream()
-                        .forEach(edge1 -> System.out.println(edge1.getSource().getName() + "->" + edge1.getDestination().getName()));
+                String pathStting = stack.stream().map(edge1 -> edge1.toString())
+                        .collect(Collectors.joining("->"));
+                System.out.println(pathStting);
+                Set<Edge> paths = new HashSet<>();
+                possiblePaths.add(paths);
+                stack.stream().forEach(edge1 -> {
+                    paths.add(edge1);
+                });
+                visitNode(edgeDestination, destination, stack, possiblePaths);
+                if(possiblePaths.contains(paths)){
+                    break;
+                }
                 stack.pop();
-            } else if(source.isVisited()){
-                //Node has been visited already, break the loop
-                break;
+                //visitNode(edgeDestination, destination, stack, possiblePaths);
             } else{
                 //Next node, visit recurrsively
-                visitNode(edgeDestination, destination, stack);
+                visitNode(edgeDestination, destination, stack, possiblePaths);
             }
         }
-
+        if(stack.size() > 0){
+            stack.pop();
+        }
         //All the edges are visited, marked the node as visited
         source.setVisited(true);
+    }
+
+    public int getNumberOfNodesForPath(Set<Edge> path){
+        Set<Node> nodes = new HashSet<>();
+        for(Edge edge : path){
+            nodes.add(edge.getSource());
+            nodes.add(edge.getDestination());
+        }
+
+        return nodes.size();
     }
 
     //@TODO Since the Node and Edges are fixed, we can use object pooling. To be completed later. Currently not in use
